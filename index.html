@@ -8,7 +8,6 @@
     * {
       box-sizing: border-box;
     }
-
     body {
       margin: 0;
       height: 100vh;
@@ -20,7 +19,6 @@
       align-items: center;
       position: relative;
     }
-
     .neon-bg {
       position: absolute;
       width: 100%;
@@ -30,7 +28,6 @@
       transition: background 0.2s ease;
       z-index: 0;
     }
-
     .center-box {
       position: relative;
       background: rgba(24, 24, 24, 0.95);
@@ -43,7 +40,6 @@
       flex-direction: column;
       gap: 18px;
     }
-
     h1 {
       text-align: center;
       margin-bottom: 10px;
@@ -51,14 +47,12 @@
       font-weight: 600;
       color: #c084fc;
     }
-
     label {
       color: #aaa;
       font-size: 14px;
       margin-bottom: 5px;
       display: block;
     }
-
     input[type="text"] {
       width: 100%;
       padding: 12px;
@@ -69,13 +63,11 @@
       font-size: 14px;
       transition: 0.2s;
     }
-
     input[type="text"]:focus {
       border-color: #ba55d3;
       outline: none;
       box-shadow: 0 0 6px #ba55d3;
     }
-
     .toggle-wrapper {
       display: flex;
       align-items: center;
@@ -83,7 +75,6 @@
       margin-top: 5px;
       position: relative;
     }
-
     .toggle-btn {
       width: 60px;
       height: 30px;
@@ -94,7 +85,6 @@
       transition: 0.3s;
       flex-shrink: 0;
     }
-
     .toggle-circle {
       position: absolute;
       width: 26px;
@@ -105,17 +95,14 @@
       left: 2px;
       transition: 0.3s ease;
     }
-
     .toggle-on .toggle-circle {
       left: 32px;
     }
-
     .toggle-label {
       color: #ddd;
       font-size: 14px;
       user-select: none;
     }
-
     .tooltip {
       position: absolute;
       bottom: -25px;
@@ -131,7 +118,6 @@
       pointer-events: none;
       transition: 0.3s;
     }
-
     .toggle-wrapper:hover .tooltip {
       opacity: 1;
     }
@@ -149,6 +135,11 @@
     </div>
 
     <div>
+      <label for="chatIdInput">ID получателя (chat_id)</label>
+      <input type="text" id="chatIdInput" placeholder="например: 123456789">
+    </div>
+
+    <div>
       <label for="textInput">Текст для спама</label>
       <input type="text" id="textInput" placeholder="например: привет!">
     </div>
@@ -157,7 +148,7 @@
       <span class="toggle-label">Включить/выключить спам</span>
       <div class="toggle-btn" id="toggleBtn">
         <div class="toggle-circle"></div>
-        <div class="tooltip">Нажмите для активации спама</div>
+        <div class="tooltip">Нажмите для запуска спама</div>
       </div>
     </div>
   </div>
@@ -172,19 +163,38 @@
     });
 
     const toggleBtn = document.getElementById('toggleBtn');
-    let toggleState = false;
-    toggleBtn.addEventListener('click', () => {
-      toggleState = !toggleState;
-      toggleBtn.classList.toggle('toggle-on');
-      const token = document.getElementById('tokenInput').value;
-      const text = document.getElementById('textInput').value;
+    let spamming = false;
+    let spamInterval;
 
-      if (toggleState) {
-        console.log("✅ СПАМ ВКЛЮЧЕН", token, text);
-        // тут отправка на сервер
+    toggleBtn.addEventListener('click', () => {
+      spamming = !spamming;
+      toggleBtn.classList.toggle('toggle-on');
+
+      const token = document.getElementById('tokenInput').value.trim();
+      const chatId = document.getElementById('chatIdInput').value.trim();
+      const text = document.getElementById('textInput').value.trim();
+
+      if (!token || !chatId || !text) {
+        alert("Пожалуйста, заполните все поля!");
+        toggleBtn.classList.remove('toggle-on');
+        spamming = false;
+        return;
+      }
+
+      if (spamming) {
+        spamInterval = setInterval(() => {
+          fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: chatId,
+              text: text
+            })
+          }).catch(err => console.error("Ошибка:", err));
+        }, 1000); // 1 сообщение в секунду — безопасный лимит
       } else {
-        console.log("⛔ СПАМ ВЫКЛЮЧЕН");
-        // остановить спам
+        clearInterval(spamInterval);
+        console.log("⛔ Спам остановлен");
       }
     });
   </script>

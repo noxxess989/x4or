@@ -1,202 +1,78 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>x4ordecrypt</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Void$Method</title>
+  <link rel="icon" href="saturn.png" type="image/png" />
   <style>
     * {
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
     }
+
     body {
-      margin: 0;
-      height: 100vh;
-      background: #0d0d0d;
-      font-family: 'Poppins', sans-serif;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-    }
-    .neon-bg {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(186, 85, 211, 0.25), transparent 40%);
-      transition: background 0.2s ease;
-      z-index: 0;
-    }
-    .center-box {
-      position: relative;
-      background: rgba(24, 24, 24, 0.95);
-      padding: 30px 25px;
-      border-radius: 20px;
-      box-shadow: 0 0 25px rgba(186, 85, 211, 0.5);
-      width: 360px;
-      z-index: 1;
+      background-color: #0e0e0e;
+      color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
     }
-    h1 {
-      text-align: center;
-      margin-bottom: 10px;
-      font-size: 30px;
-      font-weight: 600;
-      color: #c084fc;
+
+    .logo {
+      width: 72px;
+      margin-bottom: 20px;
+      opacity: 0.9;
     }
-    label {
-      color: #aaa;
-      font-size: 14px;
-      margin-bottom: 5px;
-      display: block;
+
+    .title {
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #ccc;
+      font-weight: 400;
     }
+
+    .search-box {
+      width: 90%;
+      max-width: 500px;
+    }
+
     input[type="text"] {
       width: 100%;
-      padding: 12px;
-      border: 2px solid #2f2f2f;
-      border-radius: 12px;
-      background-color: #1a1a1a;
-      color: white;
-      font-size: 14px;
-      transition: 0.2s;
-    }
-    input[type="text"]:focus {
-      border-color: #ba55d3;
-      outline: none;
-      box-shadow: 0 0 6px #ba55d3;
-    }
-    .toggle-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 5px;
-      position: relative;
-    }
-    .toggle-btn {
-      width: 60px;
-      height: 30px;
-      background: #fff;
-      border-radius: 30px;
-      position: relative;
-      cursor: pointer;
-      transition: 0.3s;
-      flex-shrink: 0;
-    }
-    .toggle-circle {
-      position: absolute;
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: #ba55d3;
-      top: 2px;
-      left: 2px;
-      transition: 0.3s ease;
-    }
-    .toggle-on .toggle-circle {
-      left: 32px;
-    }
-    .toggle-label {
-      color: #ddd;
-      font-size: 14px;
-      user-select: none;
-    }
-    .tooltip {
-      position: absolute;
-      bottom: -25px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #1e1e1e;
-      color: #ccc;
-      padding: 4px 10px;
+      padding: 14px 18px;
+      border: none;
       border-radius: 8px;
-      font-size: 12px;
-      white-space: nowrap;
-      opacity: 0;
-      pointer-events: none;
-      transition: 0.3s;
+      font-size: 16px;
+      background-color: #1b1b1b;
+      color: #eee;
+      outline: none;
+      box-shadow: inset 0 0 6px #00000055;
     }
-    .toggle-wrapper:hover .tooltip {
-      opacity: 1;
+
+    input[type="text"]::placeholder {
+      color: #555;
     }
   </style>
 </head>
 <body>
-  <div class="neon-bg" id="neon"></div>
-
-  <div class="center-box">
-    <h1>x4orTG</h1>
-
-    <div>
-      <label for="tokenInput">Токен Telegram-бота</label>
-      <input type="text" id="tokenInput" placeholder="например: 7574989808:AAH...">
-    </div>
-
-    <div>
-      <label for="chatIdInput">ID получателя (chat_id)</label>
-      <input type="text" id="chatIdInput" placeholder="например: 123456789">
-    </div>
-
-    <div>
-      <label for="textInput">Текст для спама</label>
-      <input type="text" id="textInput" placeholder="например: привет!">
-    </div>
-
-    <div class="toggle-wrapper">
-      <span class="toggle-label">Включить/выключить спам</span>
-      <div class="toggle-btn" id="toggleBtn">
-        <div class="toggle-circle"></div>
-        <div class="tooltip">Нажмите для запуска спама</div>
-      </div>
-    </div>
-  </div>
+  <img src="saturn.png" alt="" class="logo" />
+  <div class="title">Void$Method</div>
+  <form class="search-box" onsubmit="searchGoogle(event)">
+    <input type="text" id="search" placeholder="Search..." autocomplete="off" />
+  </form>
 
   <script>
-    const neon = document.getElementById('neon');
-    document.addEventListener('mousemove', (e) => {
-      const x = (e.clientX / window.innerWidth) * 100;
-      const y = (e.clientY / window.innerHeight) * 100;
-      neon.style.setProperty('--x', `${x}%`);
-      neon.style.setProperty('--y', `${y}%`);
-    });
-
-    const toggleBtn = document.getElementById('toggleBtn');
-    let spamming = false;
-    let spamInterval;
-
-    toggleBtn.addEventListener('click', () => {
-      spamming = !spamming;
-      toggleBtn.classList.toggle('toggle-on');
-
-      const token = document.getElementById('tokenInput').value.trim();
-      const chatId = document.getElementById('chatIdInput').value.trim();
-      const text = document.getElementById('textInput').value.trim();
-
-      if (!token || !chatId || !text) {
-        alert("Пожалуйста, заполните все поля!");
-        toggleBtn.classList.remove('toggle-on');
-        spamming = false;
-        return;
+    function searchGoogle(event) {
+      event.preventDefault();
+      const query = document.getElementById("search").value.trim();
+      if (query !== "") {
+        window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(query);
       }
-
-      if (spamming) {
-        spamInterval = setInterval(() => {
-          fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              chat_id: chatId,
-              text: text
-            })
-          }).catch(err => console.error("Ошибка:", err));
-        }, 1000); // 1 сообщение в секунду — безопасный лимит
-      } else {
-        clearInterval(spamInterval);
-        console.log("⛔ Спам остановлен");
-      }
-    });
+    }
   </script>
 </body>
 </html>

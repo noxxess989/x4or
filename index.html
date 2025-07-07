@@ -6,41 +6,26 @@
   <title>Void$Method</title>
   <link rel="icon" href="saturn.png" type="image/png" />
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      background-color: #0e0e0e;
-      color: #ffffff;
-      font-family: 'Segoe UI', sans-serif;
+      background: #0e0e0e;
+      color: white;
+      font-family: Segoe UI, sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
+      min-height: 100vh;
     }
-
     .logo {
       width: 72px;
-      margin-bottom: 20px;
+      margin: 20px;
       opacity: 0.9;
     }
-
-    .title {
-      font-size: 28px;
-      margin-bottom: 20px;
-      color: #ccc;
-      font-weight: 400;
-    }
-
     .search-box {
       width: 90%;
-      max-width: 500px;
+      max-width: 600px;
+      margin-bottom: 10px;
     }
-
     input[type="text"] {
       width: 100%;
       padding: 14px 18px;
@@ -52,26 +37,49 @@
       outline: none;
       box-shadow: inset 0 0 6px #00000055;
     }
-
-    input[type="text"]::placeholder {
-      color: #555;
+    iframe {
+      width: 100%;
+      flex-grow: 1;
+      border: none;
+      height: 80vh;
     }
   </style>
 </head>
 <body>
-  <img src="saturn.png" alt="" class="logo" />
-  <div class="title">Void$Method</div>
-  <form class="search-box" onsubmit="searchGoogle(event)">
-    <input type="text" id="search" placeholder="Search..." autocomplete="off" />
-  </form>
+  <img class="logo" src="saturn.png" alt="Saturn Icon" />
+  <div class="search-box">
+    <form id="searchForm">
+      <input type="text" id="query" placeholder="Search..." autocomplete="off" />
+    </form>
+  </div>
+  <iframe id="results"></iframe>
 
   <script>
-    function searchGoogle(event) {
-      event.preventDefault();
-      const query = document.getElementById("search").value.trim();
-      if (query !== "") {
-        window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(query);
+    const input = document.getElementById("query");
+    const iframe = document.getElementById("results");
+    const form = document.getElementById("searchForm");
+
+    // Получаем запрос из URL-пути
+    const rawPath = decodeURIComponent(window.location.pathname);
+    const queryFromURL = rawPath.replace(/^\/x4or\//, "").trim();
+
+    // Если есть запрос — сразу делаем поиск
+    if (queryFromURL) {
+      input.value = queryFromURL;
+      doSearch(queryFromURL);
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const val = input.value.trim();
+      if (val) {
+        window.location.href = "/x4or/" + encodeURIComponent(val);
       }
+    });
+
+    function doSearch(query) {
+      const duckURL = `https://duckduckgo.com/html/?q=${encodeURIComponent(query)}&ko=-2&k1=-1&k7=#000000`;
+      iframe.src = duckURL;
     }
   </script>
 </body>

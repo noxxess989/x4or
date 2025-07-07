@@ -2,26 +2,43 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Void$Method</title>
   <link rel="icon" href="saturn.png" type="image/png">
-  <!-- OpenSearch (чтобы Firefox предлагал добавить поисковик) -->
   <link rel="search" type="application/opensearchdescription+xml" title="Void$Method" href="opensearch.xml">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     body {
       background-color: #0e0e0e;
-      color: #ffffff;
+      color: #fff;
       font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      text-align: center;
+      padding: 20px;
     }
-    .logo { width: 72px; margin-bottom: 20px; opacity: 0.9; }
-    .title { font-size: 28px; margin-bottom: 20px; color: #ccc; font-weight: 400; }
-    .search-box { width: 90%; max-width: 500px; }
+    .logo {
+      width: 72px;
+      margin-bottom: 20px;
+      opacity: 0.9;
+    }
+    .title {
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #ccc;
+      font-weight: 400;
+    }
+    .search-box {
+      width: 100%;
+      max-width: 500px;
+    }
     input[type="text"] {
       width: 100%;
       padding: 14px 18px;
@@ -31,38 +48,33 @@
       background-color: #1b1b1b;
       color: #eee;
       outline: none;
-      box-shadow: inset 0 0 6px #00000055;
+      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     }
-    input[type="text"]::placeholder { color: #555; }
+    input[type="text"]::placeholder {
+      color: #555;
+    }
   </style>
 </head>
 <body>
-  <img src="saturn.png" class="logo" alt="Saturn Icon">
+  <img src="saturn.png" class="logo" alt="Void$Method">
   <div class="title">Void$Method</div>
 
-  <form class="search-box" id="searchForm">
+  <form class="search-box" id="searchForm" action="https://duckduckgo.com/" method="get" target="_blank">
     <input type="text" name="q" id="searchInput" placeholder="Search..." autocomplete="off" required>
+    <input type="hidden" name="ko" value="-2">
+    <input type="hidden" name="k1" value="-1">
+    <input type="hidden" name="kz" value="-1">
+    <input type="hidden" name="km" value="m">
+    <input type="hidden" name="k7" value="#000000">
   </form>
 
   <script>
-    // Если в URL есть ?q=запрос — перенаправляем в DuckDuckGo с настройками
+    // Если в URL есть ?q=запрос — сразу перекидываем в DuckDuckGo
     const urlParams = new URLSearchParams(window.location.search);
     const query = urlParams.get('q');
-    
     if (query) {
-      const ddgUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}&ko=-2&k1=-1&kz=-1&km=m&k7=#000000`;
-      window.location.href = ddgUrl;
+      window.location.href = `https://duckduckgo.com/?q=${encodeURIComponent(query)}&ko=-2&k1=-1&kz=-1&km=m&k7=#000000`;
     }
-
-    // Если запрос ввели в форму на сайте — делаем то же самое
-    document.getElementById('searchForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const query = document.getElementById('searchInput').value.trim();
-      if (query) {
-        const ddgUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}&ko=-2&k1=-1&kz=-1&km=m&k7=#000000`;
-        window.location.href = ddgUrl;
-      }
-    });
   </script>
 </body>
 </html>

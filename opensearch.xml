@@ -1,7 +1,8 @@
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
   <ShortName>Void$Method</ShortName>
-  <Description>Search via Void$Method (DuckDuckGo)</Description>
+  <Description>Search via Void$Method (DuckDuckGo Dark)</Description>
   <InputEncoding>UTF-8</InputEncoding>
   <Image width="16" height="16" type="image/png">https://noxxess989.github.io/x4or/saturn.png</Image>
-  <Url type="text/html" method="get" template="https://noxxess989.github.io/x4or/?q={searchTerms}"/>
+  <Url type="text/html" method="get" 
+       template="https://duckduckgo.com/?q={searchTerms}&amp;ko=-2&amp;k1=-1&amp;kz=-1&amp;km=m&amp;k7=#000000"/>
 </OpenSearchDescription>
